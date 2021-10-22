@@ -1,22 +1,11 @@
 <template>
 <tr>
     <td>
-    <b-form-group id="input-group-4" v-slot="{ ariaDescribedby }">
-        <b-form-checkbox-group
-        id="checkboxes-4"
-        :aria-describedby="ariaDescribedby"
-        >
-        <b-form-checkbox
-            v-model="completed"
-            :indeterminate="indeterminate"
-            aria-describedby="flavours"
-            aria-controls="flavours"
-            @change="doSomething"
-        >
-            <span class="p-2">{{name}}</span>
+      <b-form-checkbox v-model="enabled" name="check-button" switch  @change="doSomething">
+        <span class="p-2">
+        {{name}}
+        </span>
         </b-form-checkbox>
-        </b-form-checkbox-group>
-    </b-form-group>
     </td>
     <td>
       <b-button v-b-modal="''+itemId">Editar</b-button>
@@ -56,8 +45,7 @@ export default {
       form: {
         name: this.name
       },
-      allSelected: false,
-      indeterminate: false
+      enabled: this.completed
     }
   },
   methods: {

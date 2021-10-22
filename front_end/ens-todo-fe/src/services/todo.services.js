@@ -9,19 +9,21 @@ const axiosInstance = axios.create({
   }
 })
 
-const URL_CENTER = 'http://localhost:8080/api/todo'
+const URL_TODOS = 'http://localhost:8080/api/todo'
 
 class TodoService {
   async getTodos () {
-    return axiosInstance.get(`${URL_CENTER}`).then((response) => response)
+    return axiosInstance.get(`${URL_TODOS}`).then((response) => response)
   }
 
   async newTodo (todo) {
     return axios.post(
-      `${URL_CENTER}`,
+      `${URL_TODOS}`,
       todo,
       {
-        headers: { 'Content-Type': 'multipart/form-data' }
+        headers: {
+          'Content-Type': 'application/json'
+        }
       }
     ).then(response => {
       return response

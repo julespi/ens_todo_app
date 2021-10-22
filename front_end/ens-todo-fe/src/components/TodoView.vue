@@ -8,7 +8,6 @@
               id="input-2"
               v-model="form.name"
               placeholder="Agregar una tarea"
-              required
             ></b-form-input>
           </b-form-group>
           <br>
@@ -19,8 +18,7 @@
         <b-form>
         <table class="table" v-if="true">
           <tbody>
-            <!-- REPETIR CON INFO DB -->
-            <TodoItem v-for="todo in todos" :key="todo.id" v-bind:itemId="todo.id" v-bind:name="todo.name"/>
+            <TodoItem v-for="todo in todos" :key="todo.id" v-bind:itemId="todo.id" v-bind:name="todo.name" v-bind:completed="todo.completed"/>
           </tbody>
         </table>
         </b-form>
@@ -56,7 +54,21 @@ export default {
       console.log('we didd it')
     },
     onSubmit (event) {
-      console.log('we didd it')
+      event.preventDefault()
+      console.log('submitting...')
+      todoService
+        .newTodo(this.form)
+        .then((response) => {
+          console.log(response)
+          this.todos.push(response.data)
+        })
+        .catch((error) => {
+          /* var message = ''
+          for (const [key, err] of Object.entries(error.data.errors)) {
+            message += `${key}: ${err}`
+          } */
+          console.log(error)
+        })
     },
     getTodos () {
       todoService.getTodos().then((data) => {
