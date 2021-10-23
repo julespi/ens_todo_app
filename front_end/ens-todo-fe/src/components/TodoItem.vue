@@ -1,7 +1,7 @@
 <template>
 <tr>
     <td>
-      <b-form-checkbox v-model="enabled" name="check-button" switch  @change="doSomething">
+      <b-form-checkbox v-model="enabled" name="check-button" switch  @change="updateComplete">
         <span class="p-2">
         {{name}}
         </span>
@@ -11,7 +11,7 @@
       <b-button v-b-modal="''+itemId">Editar</b-button>
       <b-modal v-bind:id="''+itemId" v-bind:title="'Todo' + itemId">
         <p class="my-4">
-          <b-form @submit="onSubmit">
+          <b-form @submit="onSubmitEdit">
           <b-form-group id="edit-todo" label="Editar Todo" label-for="edit-todo">
             <b-form-input
               id="input-2"
@@ -32,6 +32,10 @@
 </template>
 
 <script>
+// PROVIDERS
+import TodoService from '@/services/todo.services.js'
+const todoService = new TodoService()
+
 export default {
   name: 'TodoItem',
   components: {},
@@ -43,22 +47,48 @@ export default {
   data () {
     return {
       form: {
-        name: this.name
+        id: this.itemId,
+        name: this.name,
+        completed: this.completed
+
       },
       enabled: this.completed
     }
   },
   methods: {
-    doSomething (checked) {
-      console.log('we didd it', this.itemId)
+    updateComplete (checked) {
+      this.form.completed = checked
+      todoService
+        .editTodo(this.form)
+        .then((response) => {
+          console.log(response)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     },
-    onSubmit (event) {
+    onSubmitEdit (event) {
       event.preventDefault()
-      alert(JSON.stringify(this.form))
+      todoService
+        .editTodo(this.form)
+        .then((response) => {
+          console.log(response)
+          this.name = this.form.name
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     },
     remove () {
       this.$destroy()
-      // remove the element from the DOM
+      todoService
+        .removeTodo(this.itemId)
+        .then((response) => {
+          console.log(response)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
       this.$el.parentNode.removeChild(this.$el)
     }
   }
