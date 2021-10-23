@@ -34,7 +34,7 @@ public abstract class GenericDao<T> {
         entityManager.remove(t);
     }
 
-    public List<T> list(Class<T> clazz) throws RuntimeException{
+    public List<T> list(Class<T> clazz){
         String query = "FROM "+clazz.getSimpleName();
         return new ArrayList<>(entityManager.createQuery(query,clazz).getResultList());
     }

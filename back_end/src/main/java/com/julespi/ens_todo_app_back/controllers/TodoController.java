@@ -16,6 +16,7 @@ import java.util.Map;
 
 
 @RestController
+@CrossOrigin//(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
 public class TodoController {
 
     @Autowired
