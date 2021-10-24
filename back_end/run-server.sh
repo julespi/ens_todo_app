@@ -13,7 +13,7 @@ white=`tput setaf 7`
 
 function install_java () {
   # Install Java JDK 1.8.0
-  apt install openjdk-8-jdk -y
+  apt-get install openjdk-8-jdk -y
   JAVA_VERSION="$(java -version 2>&1 | head -n 1 | awk -F '"' '{print $2}' | cut -b 1-5)"
 }
 
@@ -22,16 +22,16 @@ function install_gradle () {
   # https://linuxize.com/post/how-to-install-gradle-on-ubuntu-20-04/
   VERSION="6.9.1"
   GRADLE_SH="/etc/profile.d/gradle.sh"
-  mkdir /tmp
-  wget https://services.gradle.org/distributions/gradle-${VERSION}-bin.zip -P /tmp
-  unzip -d /opt/gradle /tmp/gradle-${VERSION}-bin.zip
+  mkdir tmp
+  wget https://services.gradle.org/distributions/gradle-${VERSION}-bin.zip -P tmp
+  unzip -d /opt/gradle tmp/gradle-${VERSION}-bin.zip
   ln -s /opt/gradle/gradle-${VERSION} /opt/gradle/latest
   touch /etc/profile.d/gradle.sh
   echo "export GRADLE_HOME=/opt/gradle/latest" >> "$GRADLE_SH"
   echo "export PATH=/opt/gradle/latest/bin:\${PATH}" >> "$GRADLE_SH"
   chmod u+x /etc/profile.d/gradle.sh
-  source /etc/profile.d/gradle.sh  # Upload Gradle Environment Varibles
-  rm /tmp/gradle-${VERSION}-bin.zip
+  (source /etc/profile.d/gradle.sh)  # Upload Gradle Environment Varibles
+  rm tmp/gradle-${VERSION}-bin.zip
   GRADLE_VERSION="$(gradle -v | grep Gradle | cut -d ' ' -f 2)" # Actualiza
 }
 
@@ -59,6 +59,7 @@ function check_java {
 function run_server () {
 	apt-get update -y
 	apt-get upgrade -y
+	apt-get install unzip -y
 
 	echo "${white}Requriments Checking...${reset}"
 	
@@ -81,6 +82,7 @@ function run_server () {
 	fi
 
 	echo "${green}All requirements satisfied${reset}"
+	echo "${green}Building and Running Spring Boot App${reset}"
 
 	# Clean and Build Spring Boot App to a War file
 	output="$(exec /opt/gradle/latest/bin/gradle clean build)"
